@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language-Agnostic Playground</title>
+    <link rel="stylesheet" href="css/style1.css">
+</head>
+<body>
+    <header>
+        <h1>🌟 Language-Agnostic Playground</h1>
+        <nav>
+            <a href="index.html">Parent Portal</a>
+            <a href="#games">Games</a>
+            <a href="#video-chat">Play Date</a>
+        </nav>
+    </header>
+
+    <section id="games">
+        <h2>🎮 Explore Games</h2>
+        <div class="game-grid">
+            <iframe src="https://scratch.mit.edu/projects/1082337884/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen>
+
+            </iframe>
+            <iframe src="https://scratch.mit.edu/projects/569425277/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
+            <iframe src="https://scratch.mit.edu/projects/1085908372/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
+            <iframe src="https://scratch.mit.edu/projects/1085932732/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
+            <iframe src="https://scratch.mit.edu/projects/1086108934/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
+            <div class="game-item" id="paint-game">
+                <img src="img/paint-thumbnail.jpg" alt="Paint Game">
+                <p>Creative Drawing Space</p>
+            </div>
+            <div>
+                <iframe src="https://youtu.be/Ndcsgkixnv4"allowtransparency="true" width="1455" height="816" frameborder="0" scrolling="no" allowfullscreen></iframe>
+           
+            </div>
+            <iframe src="https://whitehatjr.github.io/AngryBirds-1/" allowtransparency="true" width="2000" height="800" frameborder="0" scrolling="no" allowfullscreen></iframe>
+            
+           
+        </div>
+    </section>
+
+    <section id="video-chat">
+        <h2>📞 Virtual Play Date</h2>
+        <iframe src="" allow="camera; microphone" allowfullscreen></iframe>
+    </section>
+
+    <footer>
+        <p>Copyright © 2024 Vaibhav's Playground</p>
+    </footer>
+
+    <!-- Paint Game Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <iframe src="paint.html" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Modal Logic
+        const modal = document.getElementById('modal');
+        const paintGame = document.getElementById('paint-game');
+        const closeBtn = document.querySelector('.close');
+
+        paintGame.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

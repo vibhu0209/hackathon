@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Drawing Space</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+        #alphabet-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        #toolbox {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .tool-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        img {
+            cursor: pointer;
+            margin: 5px;
+            width: 50px;
+            height: 50px;
+        }
+        #back-home {
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #back-home:hover {
+            background-color: #45a049;
+        }
+        #alphabet-images img {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #alphabet-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 850px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Creative Drawing Space</h1>
+    </header>
+    
+    <canvas id="drawingCanvas" width="800" height="600"></canvas>
+    
+    <div id="toolbox">
+        <button class="tool-button" id="brush-tool" onclick="setTool('brush')">Brush</button>
+        <button class="tool-button" id="eraser-tool" onclick="setTool('eraser')">Eraser</button>
+        <button class="tool-button" id="fill-tool" onclick="setTool('fill')">Fill</button>
+        <button class="tool-button" id="clear-button" onclick="clearCanvas()">Clear Canvas</button>
+        <label for="brush-size">Brush Size:</label>
+        <input type="range" id="brush-size" min="1" max="50" value="5" onchange="updateBrushSize(this.value)">
+    </div>
+
+    <div id="color-palette">
+        <input type="color" id="color-picker" value="#ff0000">
+        <span>Select Color</span>
+    </div>
+
+    <div id="alphabet-images">
+        <img src="img/a.jpg" alt="A" onclick="loadImage('img/a.jpg')">
+        <img src="img/b.jpg" alt="B" onclick="loadImage('img/b.jpg')">
+        <img src="img/c.jpg" alt="C" onclick="loadImage('img/c.jpg')">
+        <img src="img/d.jpg" alt="D" onclick="loadImage('img/d.jpg')">
+        <img src="img/e.jpg" alt="E" onclick="loadImage('img/e.jpg')">
+        <img src="img/f.jpg" alt="F" onclick="loadImage('img/f.jpg')">
+        <img src="img/g.jpg" alt="G" onclick="loadImage('img/g.jpg')">
+        <img src="img/h.jpg" alt="H" onclick="loadImage('img/h.jpg')">
+        <img src="img/i.jpg" alt="I" onclick="loadImage('img/i.jpg')">
+        <img src="img/j.jpg" alt="J" onclick="loadImage('img/j.jpg')">
+        <img src="img/k.jpg" alt="K" onclick="loadImage('img/k.jpg')">
+        <img src="img/l.jpg" alt="L" onclick="loadImage('img/l.jpg')">
+        <img src="img/m.jpg" alt="M" onclick="loadImage('img/m.jpg')">
+        <img src="img/n.jpg" alt="N" onclick="loadImage('img/n.jpg')">
+        <img src="img/o.jpg" alt="O" onclick="loadImage('img/o.jpg')">
+        <img src="img/p.jpg" alt="P" onclick="loadImage('img/p.jpg')">
+        <img src="img/q.jpg" alt="Q" onclick="loadImage('img/q.jpg')">
+        <img src="img/r.jpg" alt="R" onclick="loadImage('img/r.jpg')">
+        <img src="img/s.jpg" alt="S" onclick="loadImage('img/s.jpg')">
+        <img src="img/t.jpg" alt="T" onclick="loadImage('img/t.jpg')">
+        <img src="img/u.jpg" alt="U" onclick="loadImage('img/u.jpg')">
+        <img src="img/v.jpg" alt="V" onclick="loadImage('img/v.jpg')">
+        <img src="img/w.jpg" alt="W" onclick="loadImage('img/w.jpg')">
+        <img src="img/x.jpg" alt="X" onclick="loadImage('img/x.jpg')">
+        <img src="img/y.jpg" alt="Y" onclick="loadImage('img/y.jpg')">
+        <img src="img/z.jpg" alt="Z" onclick="loadImage('img/z.jpg')">
+    </div>
+    
+
+    <button id="back-home" onclick="goHome()">Back to Home</button>
+
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentTool = 'brush'; // Default tool
+        let brushColor = document.getElementById('color-picker').value; // Default brush color
+        let isDrawing = false;
+        let brushSize = 5; // Default brush size
+        let isFilling = false;
+
+        // Set the current tool (brush, eraser, or fill)
+        function setTool(tool) {
+            currentTool = tool;
+            if (tool === 'eraser') {
+                brushColor = '#FFFFFF'; // Eraser color is white
+            } else {
+                brushColor = document.getElementById('color-picker').value; // Get color from the color picker
+            }
+        }
+        function setFillMode() {
+            isFilling = true;
+        }
+
+        canvas.addEventListener('click', (e) => {
+            if (isFilling) {
+                const mouseX = e.offsetX;
+                const mouseY = e.offsetY;
+                fill(mouseX, mouseY);
+                isFilling = false; // Turn off fill mode after one use
+            }
+        });
+
+        // Clear the canvas
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+        }
+
+        // Update the brush size
+        function updateBrushSize(size) {
+            brushSize = size;
+        }
+
+        // Mouse events for drawing
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            if (currentTool === 'fill') {
+                fill(e.offsetX, e.offsetY);
+            } else {
+                draw(e.offsetX, e.offsetY);
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDrawing && currentTool !== 'fill') {
+                draw(e.offsetX, e.offsetY);
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+            ctx.beginPath(); // Reset path for new drawing
+        });
+
+        // Drawing function
+        function draw(x, y) {
+            ctx.lineWidth = brushSize; // Brush size
+            ctx.lineCap = 'round'; // Round brush edges
+            ctx.strokeStyle = brushColor;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function loadImage(src) {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas before loading the image
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+        }
+
+        // Fill function using flood-fill algorithm
+ // Fill function using flood-fill algorithm
+function fill(x, y) {
+    const targetColor = ctx.getImageData(x, y, 1, 1).data; // Get the color of the clicked pixel
+    const fillColor = hexToRgb(brushColor);
+    if (!colorsMatch(targetColor, fillColor)) {
+        floodFill(x, y, targetColor, fillColor);
+    }
+}
+
+// Convert hex to RGB
+function hexToRgb(hex) {
+    let bigint = parseInt(hex.slice(1), 16);
+    return [bigint >> 16 & 255, bigint >> 8 & 255, bigint & 255, 255];
+}
+
+// Tolerance for color comparison
+function colorsMatch(color1, color2, tolerance = 10) {
+    return Math.abs(color1[0] - color2[0]) <= tolerance &&
+           Math.abs(color1[1] - color2[1]) <= tolerance &&
+           Math.abs(color1[2] - color2[2]) <= tolerance &&
+           Math.abs(color1[3] - color2[3]) <= tolerance;
+}
+
+// Updated Flood-fill algorithm with tolerance check
+function floodFill(x, y, targetColor, fillColor) {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const pixelStack = [[x, y]];
+
+    const matchStartColor = (pixelPos) => {
+        const r = data[pixelPos];
+        const g = data[pixelPos + 1];
+        const b = data[pixelPos + 2];
+        const a = data[pixelPos + 3];
+        return colorsMatch([r, g, b, a], targetColor);
+    };
+
+    const colorPixel = (pixelPos) => {
+        data[pixelPos] = fillColor[0];
+        data[pixelPos + 1] = fillColor[1];
+        data[pixelPos + 2] = fillColor[2];
+        data[pixelPos + 3] = 255; // Fully opaque
+    };
+
+    const withinBounds = (x, y) => (x >= 0 && y >= 0 && x < canvas.width && y < canvas.height);
+
+    const pixelPosFromCoord = (x, y) => (y * canvas.width + x) * 4;
+
+    while (pixelStack.length) {
+        const [x, y] = pixelStack.pop();
+        let pixelPos = pixelPosFromCoord(x, y);
+
+        // Move up to find the top boundary of the area to fill
+        while (withinBounds(x, y - 1) && matchStartColor(pixelPosFromCoord(x, y - 1))) {
+            y--;
+            pixelPos = pixelPosFromCoord(x, y);
+        }
+
+        // Now move downward and fill the pixels
+        let reachLeft = false;
+        let reachRight = false;
+
+        while (withinBounds(x, y) && matchStartColor(pixelPos)) {
+            colorPixel(pixelPos);
+
+            if (withinBounds(x - 1, y)) {
+                if (matchStartColor(pixelPosFromCoord(x - 1, y))) {
+                    if (!reachLeft) {
+                        pixelStack.push([x - 1, y]);
+                        reachLeft = true;
+                    }
+                } else {
+                    reachLeft = false;
+                }
+            }
+
+            if (withinBounds(x + 1, y)) {
+                if (matchStartColor(pixelPosFromCoord(x + 1, y))) {
+                    if (!reachRight) {
+                        pixelStack.push([x + 1, y]);
+                        reachRight = true;
+                    }
+                } else {
+                    reachRight = false;
+                }
+            }
+
+            y++;
+            pixelPos = pixelPosFromCoord(x, y);
+        }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+}
+
+        // Redirect back to the homepage
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Optional: Change brush color when the color picker is used
+        document.getElementById('color-picker').addEventListener('input', (e) => {
+            if (currentTool !== 'eraser') {
+                brushColor = e.target.value; // Update brush color
+            }
+        });
+    </script>
+</body>
+</html>
